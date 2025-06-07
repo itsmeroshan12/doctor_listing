@@ -6,6 +6,9 @@ const generateSlug = (name) => name.toLowerCase().replace(/\s+/g, '-');
 
 exports.createClinic = async (req, res) => {
   try {
+    console.log("Received req.body:", req.body);
+    console.log("Received files:", req.files);
+
     const {
       name,
       doctorName,
@@ -25,7 +28,7 @@ exports.createClinic = async (req, res) => {
       return res.status(400).json({ message: 'Name, type, and area are required' });
     }
 
-    const slug = generateSlug(name);
+    const slug = name.toLowerCase().replace(/\s+/g, '-');
 
     const clinicImage = req.files?.clinicImage?.[0]?.filename || null;
     const doctorImage = req.files?.doctorImage?.[0]?.filename || null;
@@ -72,6 +75,7 @@ exports.createClinic = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 exports.getClinicBySlug = async (req, res) => {
   const { slug, type, area } = req.params;

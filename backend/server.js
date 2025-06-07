@@ -1,5 +1,5 @@
 require('dotenv').config(); // ✅ Load environment variables
-
+const path = require('path');
 const express = require('express');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
@@ -39,6 +39,8 @@ app.use('/api/search', searchRoutes);
 app.use('/api', require('./routes/authRoutes'));  // Auth routes
 
 app.use('/auth', authRoutes); // Auth routes
+// Serve uploaded images
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 // ✅ Start server after testing DB connection
 async function startServer() {
