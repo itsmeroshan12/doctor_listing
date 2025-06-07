@@ -1,0 +1,65 @@
+.custom-row {
+  margin-left: -4px;
+  margin-right: -4px;
+}
+
+.custom-col {
+  padding-left: 4px;
+  padding-right: 4px;
+  margin-bottom: 12px;
+}
+
+.card-hover {
+  cursor: pointer;
+  border-radius: 16px;
+  transition: transform 0.2s ease;
+  max-width: 220px;
+  margin: 0 auto;
+}
+
+.card-hover:hover {
+  transform: scale(1.05);
+}
+
+.icon-circle {
+  background-color: #e6f0ff; /* Light blue background */
+  border-radius: 50%;
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon {
+  font-size: 32px;
+  color: #0d6efd; /* Bootstrap primary blue */
+}
+
+.card-title {
+  font-size: 18px;
+}
+
+@media (min-width: 768px) {
+  .icon {
+    font-size: 36px;
+  }
+  .icon-circle {
+    padding: 16px;
+  }
+}
+
+@media (min-width: 992px) {
+  .icon {
+    font-size: 40px;
+  }
+
+  .icon-circle {
+    padding: 18px;
+  }
+
+  .custom-col {
+    padding-left: 2px;
+    padding-right: 2px;
+    margin-bottom: 8px;
+  }
+}
