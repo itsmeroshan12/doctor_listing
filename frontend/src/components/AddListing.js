@@ -2,6 +2,8 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import {
   TextField,
   Autocomplete,
@@ -68,7 +70,7 @@ const AddListing = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/listings", data);
+      const res = await axios.post("http://localhost:5000/api/clinics", data);
       toast.success("Listing added successfully");
 
       // Reset form
@@ -279,7 +281,9 @@ const AddListing = () => {
           Submit Listing
         </Button>
       </form>
+       <ToastContainer position="top-center" autoClose={3000} />
     </Box>
+    
   );
 };
 
