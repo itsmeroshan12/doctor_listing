@@ -4,15 +4,17 @@ const authenticateJWT = (req, res, next) => {
   const token = req.cookies.token;
 
   if (!token) {
-    return res.status(401).json({ message: 'Authentication token missing' });
+    return res.status(401).json({ message: 'Access denied. No token provided.' });
   }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.user = decoded; // you can access user info in req.user
+    console.log('✅ Decoded JWT payload:', decoded); // 🔍 Log it!
+    req.user = decoded;
     next();
-  } catch (error) {
-    return res.status(401).json({ message: 'Invalid or expired token' });
+  } catch (err) {
+    console.error('JWT error:', err);
+    return res.status(403).json({ message: 'Invalid or expired token.' });
   }
 };
 

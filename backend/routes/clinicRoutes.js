@@ -1,10 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { createClinic, getClinicBySlug, filterClinics } = require('../controllers/clinicController');
-const { uploadFields } = require('../middleware/multer'); // ✅ multer config
+const { createClinic, getClinicBySlug, filterClinics, getClinicsByUser } = require('../controllers/clinicController');
+const { uploadFields } = require('../middleware/multer');
+const authenticateJWT = require('../middleware/authMiddleware'); // ✅ correct
 
-router.post('/', uploadFields, createClinic); // ✅ make sure multer is applied
+router.post('/', authenticateJWT, uploadFields, createClinic);
 router.get('/:area/:type/:slug', getClinicBySlug);
 router.get('/', filterClinics);
+router.get('/myclinics', authenticateJWT, getClinicsByUser); // ✅ NEW route
 
 module.exports = router;

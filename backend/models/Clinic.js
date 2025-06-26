@@ -1,7 +1,5 @@
-// models/Clinic.js
 const db = require('../config/db');
 const slugify = require('slugify');
-
 
 // Create a new clinic
 exports.createClinic = async ({
@@ -19,16 +17,22 @@ exports.createClinic = async ({
   type,
   clinicImage,
   doctorImage,
-  otherImage
+  otherImage,
+  user_id
 }) => {
   const slug = slugify(name, { lower: true, strict: true });
+  
 
   const [result] = await db.execute(
     `INSERT INTO clinics 
-    (name, doctorName, mobile, email, address, website, experience, specialization, area, category, description, type, clinicImage, doctorImage, otherImage, slug) 
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    (name, type, area, slug, doctorName, mobile, email, address, website, 
+     experience, specialization, category, description, clinicImage, doctorImage, otherImage, user_id) 
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
       name,
+      type,
+      area,
+      slug,
       doctorName,
       mobile,
       email,
@@ -36,14 +40,12 @@ exports.createClinic = async ({
       website,
       experience,
       specialization,
-      area,
       category,
       description,
-      type,
       clinicImage,
       doctorImage,
       otherImage,
-      slug
+      user_id // ✅ fixed variable name
     ]
   );
 

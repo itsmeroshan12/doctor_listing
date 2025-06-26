@@ -15,6 +15,7 @@ const doctorRoutes = require('./routes/doctorRoutes');
 const clinicRoutes = require('./routes/clinicRoutes');
 const hospitalRoutes = require('./routes/hospitalRoutes');
 const searchRoutes = require('./routes/searchRoutes');
+const userRoutes = require('./routes/userRoutes');
 
 
 const app = express();
@@ -31,6 +32,7 @@ app.use(bodyParser.json());
 // ✅ API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/user', authRoutes);
+app.use('/api/user', userRoutes);
 app.use('/api/doctors', doctorRoutes);
 app.use('/api/clinics', clinicRoutes);
 app.use('/api/hospitals', hospitalRoutes);

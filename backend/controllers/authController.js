@@ -83,42 +83,47 @@ const loginUser = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    // Find user by email
     const user = await findUserByEmail(email);
-
     if (!user) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
+    // Check password
     const isPasswordMatch = await bcrypt.compare(password, user.password);
-
     if (!isPasswordMatch) {
       return res.status(400).json({ message: 'Invalid email or password' });
     }
 
+    // Check if email is verified
     if (!user.is_verified) {
       return res.status(403).json({ message: 'Please verify your email before logging in' });
     }
 
+    // Generate JWT token
     const token = jwt.sign(
       { userId: user.id },
       process.env.JWT_SECRET,
       { expiresIn: '1d' }
     );
 
+    // Set token as HTTP-only cookie
     res.cookie('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // set to true in production
+      secure: process.env.NODE_ENV === 'production',
       sameSite: 'strict',
       maxAge: 24 * 60 * 60 * 1000 // 1 day
     });
 
+    // Send response with user info and token
     res.status(200).json({
       message: 'Login successful!',
+      token, // ✅ Important: return token for frontend
       user: {
         id: user.id,
         email: user.email,
-        firstName: user.firstName, // ✅ Add this line
-        lastName: user.lastName,   // Optional
+        firstName: user.firstName,
+        lastName: user.lastName,
         name: user.firstName + ' ' + user.lastName
       }
     });
@@ -128,6 +133,7 @@ const loginUser = async (req, res) => {
     res.status(500).json({ message: 'Server error' });
   }
 };
+
 
 
 // Logout user
