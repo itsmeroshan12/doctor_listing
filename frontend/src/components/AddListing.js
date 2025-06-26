@@ -1,9 +1,8 @@
-// components/AddListing.js
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import axios from "axios";
-import { toast } from "react-toastify";
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 import {
   TextField,
   Autocomplete,
@@ -50,8 +49,14 @@ const AddListing = () => {
     type: "",
     clinicImage: null,
     doctorImage: null,
-    otherImage: null, // ✅ NEW FIELD
+    otherImage: null,
   });
+
+  const clinicImageRef = useRef();
+  const doctorImageRef = useRef();
+  const otherImageRef = useRef();
+
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value, files } = e.target;
@@ -70,7 +75,9 @@ const AddListing = () => {
     }
 
     try {
-      const res = await axios.post("http://localhost:5000/api/clinics", data);
+      const res = await axios.post("http://localhost:5000/api/clinics", data, {
+        withCredentials: true, // ✅ Send cookie for user_id extraction
+      });
       toast.success("Listing added successfully");
 
       // Reset form
@@ -89,8 +96,16 @@ const AddListing = () => {
         type: "",
         clinicImage: null,
         doctorImage: null,
-        otherImage: null, // 
+        otherImage: null,
       });
+
+      if (clinicImageRef.current) clinicImageRef.current.value = "";
+      if (doctorImageRef.current) doctorImageRef.current.value = "";
+      if (otherImageRef.current) otherImageRef.current.value = "";
+
+      setTimeout(() => {
+        navigate("/user/items");
+      }, 2000);
     } catch (err) {
       toast.error("Error adding listing");
     }
@@ -256,6 +271,7 @@ const AddListing = () => {
           name="clinicImage"
           accept="image/*"
           onChange={handleChange}
+          ref={clinicImageRef}
           style={{ marginBottom: "1rem" }}
         />
 
@@ -265,6 +281,7 @@ const AddListing = () => {
           name="doctorImage"
           accept="image/*"
           onChange={handleChange}
+          ref={doctorImageRef}
           style={{ marginBottom: "1rem" }}
         />
 
@@ -274,6 +291,7 @@ const AddListing = () => {
           name="otherImage"
           accept="image/*"
           onChange={handleChange}
+          ref={otherImageRef}
           style={{ marginBottom: "1.5rem" }}
         />
 
@@ -281,9 +299,8 @@ const AddListing = () => {
           Submit Listing
         </Button>
       </form>
-       <ToastContainer position="top-center" autoClose={3000} />
+      <ToastContainer position="top-center" autoClose={3000} />
     </Box>
-    
   );
 };
 

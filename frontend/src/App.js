@@ -28,7 +28,7 @@ function App() {
         <Route path="/user/forgot-password" element={<ForgotPassword />} />
         <Route path="/user/reset-password/:token" element={<ResetPassword />} />
         <Route path="/clinics/add" element={<AddClinic />} />
-        <Route path="/clinics" element={<ClinicList />} />
+        <Route path="/clinics/list" element={<ClinicList />} />
         <Route path="/user/items" element={<MyListings />} />
         {/* Optional catch-all redirect */}
         <Route path="*" element={<Navigate to="/" replace />} />
