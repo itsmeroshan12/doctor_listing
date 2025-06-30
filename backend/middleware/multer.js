@@ -17,6 +17,7 @@ const upload = multer({ storage });
 const uploadFields = upload.fields([
   { name: 'clinicImage', maxCount: 1 },
   { name: 'doctorImage', maxCount: 1 },
+  { name: 'hospitalImage', maxCount: 1 },
   { name: 'otherImage', maxCount: 1 },
 ]);
 

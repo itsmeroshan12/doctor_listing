@@ -1,12 +1,26 @@
 const express = require('express');
 const router = express.Router();
-const { createHospital, getHospitalBySlug, filterHospitals } = require('../controllers/hospitalController');
 
-router.post('/', createHospital);
-router.get('/:area/:slug', getHospitalBySlug);
+const {
+  createHospital,
+  getHospitalBySlug,
+  filterHospitals,
+  getHospitalsByUser
+} = require('../controllers/hospitalController');
 
-// Filter hospitals
+const { uploadFields } = require('../middleware/multer'); // ✅ for clinicImage, doctorImage, otherImage
+const authenticateJWT = require('../middleware/authMiddleware');
+
+// 🏥 POST: Create new hospital (Auth + Image Upload)
+router.post('/', authenticateJWT, uploadFields, createHospital);
+
+// 🔍 GET: Filter/Search hospitals
 router.get('/', filterHospitals);
 
+// 👤 GET: Hospitals added by logged-in user
+router.get('/myhospitals', authenticateJWT, getHospitalsByUser);
+
+// 🔗 GET: Single hospital by area + category + slug (SEO-friendly)
+router.get('/:area/:category/:slug', getHospitalBySlug);
 
 module.exports = router;
