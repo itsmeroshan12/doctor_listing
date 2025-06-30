@@ -1,18 +1,18 @@
 const db = require('../config/db');
 
-// Get all clinics (or listings) by logged-in user
-exports.getUserListings = async (req, res) => {
+exports.getAllUserListings = async (req, res) => {
+  const userId = req.user.userId;
+
   try {
-    const userId = req.user?.userId;
+    const [doctors] = await db.execute('SELECT *, "doctor" as listingType FROM doctors WHERE user_id = ?', [userId]);
+    const [clinics] = await db.execute('SELECT *, "clinic" as listingType FROM clinics WHERE user_id = ?', [userId]);
+    // const [hospitals] = await db.execute('SELECT *, "hospital" as listingType FROM hospitals WHERE user_id = ?', [userId]);
 
-    const [clinics] = await db.execute(
-      'SELECT * FROM clinics WHERE user_id = ? ORDER BY createdAt DESC',
-      [userId]
-    );
+    const allListings = [...doctors, ...clinics];
 
-    res.status(200).json(clinics);
-  } catch (error) {
-    console.error('Error fetching user listings:', error);
-    res.status(500).json({ message: 'Failed to fetch user listings' });
+    res.json(allListings);
+  } catch (err) {
+    console.error('❌ Error fetching all user listings:', err);
+    res.status(500).json({ message: 'Server error' });
   }
 };

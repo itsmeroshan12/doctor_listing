@@ -1,15 +1,14 @@
 const db = require('../config/db');
 
-// Helper to generate slug
-const generateSlug = (name) => name.toLowerCase().replace(/\s+/g, '-') + '-' + Date.now();
-
+// Helper to generate a URL-friendly slug
+const generateSlug = (name) =>
+  name.toLowerCase().replace(/\s+/g, '-').replace(/[^\w\-]+/g, '') + '-' + Date.now();
 
 // Create a new clinic
 exports.createClinic = async (req, res) => {
   try {
-    console.log('➡️  Logged-in user:', req.user);
-    console.log("Received req.body:", req.body);
-    console.log("Received files:", req.files);
+    console.log('🆕 Creating Clinic for user:', req.user?.userId);
+    console.table(req.body);
 
     const {
       name,
@@ -26,7 +25,7 @@ exports.createClinic = async (req, res) => {
       type,
     } = req.body;
 
-    const user_id = req.user?.userId || null; // ✅ Fixed here
+    const user_id = req.user?.userId || null;
 
     if (!name || !type || !area) {
       return res.status(400).json({ message: 'Name, type, and area are required' });
@@ -45,7 +44,7 @@ exports.createClinic = async (req, res) => {
       doctorName,
       mobile,
       email,
-      address,          
+      address,
       website,
       experience,
       specialization,
@@ -59,7 +58,7 @@ exports.createClinic = async (req, res) => {
       slug,
       createdAt,
       updatedAt,
-      user_id // ✅ Fixed here too
+      user_id,
     ];
 
     const [result] = await db.execute(
@@ -69,7 +68,7 @@ exports.createClinic = async (req, res) => {
       values
     );
 
-    const newClinic = {
+    res.status(201).json({
       id: result.insertId,
       name,
       slug,
@@ -78,33 +77,45 @@ exports.createClinic = async (req, res) => {
       clinicImage,
       doctorImage,
       otherImage,
-    };
-
-    res.status(201).json(newClinic);
+    });
   } catch (error) {
-    console.error('Error adding clinic:', error);
+    console.error('❌ Error adding clinic:', error);
     res.status(500).json({ message: error.message });
   }
 };
 
-
-// Get clinic by slug, type, and area
+// ✅ Get clinic by slug, area, and category
 exports.getClinicBySlug = async (req, res) => {
-  const { slug, type, area } = req.params;
+  const {
+    slug = '',
+    area = '',
+    category = '',
+  } = req.params;
 
   try {
-    const [rows] = await db.execute(
-      'SELECT * FROM clinics WHERE slug = ? AND LOWER(type) = ? AND LOWER(area) = ? LIMIT 1',
-      [slug, type.toLowerCase().replace(/-/g, ' '), area.toLowerCase()]
-    );
+    const cleanedArea = area.toLowerCase().trim().replace(/\s+/g, '-');
+    const cleanedCategory = category.toLowerCase().trim().replace(/\s+/g, '-');
+
+    let query = `
+      SELECT * FROM clinics 
+      WHERE slug = ?
+        AND REPLACE(LOWER(TRIM(area)), ' ', '-') = ?
+        AND REPLACE(LOWER(TRIM(category)), ' ', '-') = ?
+      LIMIT 1
+    `;
+
+    const params = [slug, cleanedArea, cleanedCategory];
+
+    const [rows] = await db.execute(query, params);
 
     if (rows.length === 0) {
+      console.warn('Clinic not found for:', { slug, cleanedArea, cleanedCategory });
       return res.status(404).json({ message: 'Clinic not found' });
     }
 
     res.json(rows[0]);
   } catch (error) {
-    console.error('Error fetching clinic by slug:', error);
+    console.error('❌ Error fetching clinic by slug:', error);
     res.status(500).json({ error: error.message });
   }
 };
@@ -120,12 +131,12 @@ exports.getClinicsByUser = async (req, res) => {
     );
     res.json(results);
   } catch (err) {
-    console.error('Error fetching user clinics:', err);
+    console.error('❌ Error fetching user clinics:', err);
     res.status(500).json({ message: 'Server error' });
   }
 };
 
-// Filter clinics by area, type, or name
+// Filter clinics by name, area, or type
 exports.filterClinics = async (req, res) => {
   const { area, type, name } = req.query;
 
@@ -147,11 +158,13 @@ exports.filterClinics = async (req, res) => {
     params.push(`%${name}%`);
   }
 
+  query += ' ORDER BY createdAt DESC'; // always show newest first
+
   try {
     const [rows] = await db.execute(query, params);
     res.json(rows);
   } catch (error) {
-    console.error('Error filtering clinics:', error);
+    console.error('❌ Error filtering clinics:', error);
     res.status(500).json({ error: error.message });
   }
 };

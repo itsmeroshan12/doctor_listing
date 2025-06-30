@@ -1,12 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const { createClinic, getClinicBySlug, filterClinics, getClinicsByUser } = require('../controllers/clinicController');
+const {
+  createClinic,
+  getClinicBySlug,
+  filterClinics,
+  getClinicsByUser
+} = require('../controllers/clinicController');
 const { uploadFields } = require('../middleware/multer');
-const authenticateJWT = require('../middleware/authMiddleware'); // ✅ correct
+const authenticateJWT = require('../middleware/authMiddleware');
 
+// Routes
 router.post('/', authenticateJWT, uploadFields, createClinic);
-router.get('/:area/:type/:slug', getClinicBySlug);
 router.get('/', filterClinics);
-router.get('/myclinics', authenticateJWT, getClinicsByUser); // ✅ NEW route
+router.get('/myclinics', authenticateJWT, getClinicsByUser);
+
+// ✅ FIXED: Removed extra /clinics
+router.get('/:area/:category/:slug', getClinicBySlug);
 
 module.exports = router;

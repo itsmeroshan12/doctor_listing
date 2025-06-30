@@ -1,11 +1,27 @@
-// backend/routes/doctorRoutes.js
-
 const express = require('express');
 const router = express.Router();
-const doctorController = require('../controllers/doctorController');
 
-router.post('/', doctorController.createDoctor);
-router.get('/slug/:slug/:specialty/:area', doctorController.getDoctorBySlug);
-router.get('/filter', doctorController.filterDoctors);
+const {
+  createDoctor,
+  getDoctorBySlug,
+  filterDoctors,
+  getDoctorsByUser
+} = require('../controllers/doctorController');
+
+const { uploadFields } = require('../middleware/multer'); // 🖼️ for doctorImage, clinicImage, otherImage
+const authenticateJWT = require('../middleware/authMiddleware');
+
+// 🩺 POST: Create new doctor (Auth + Image Upload)
+router.post('/', authenticateJWT, uploadFields, createDoctor);
+
+// 🔍 GET: Filter/Search doctors
+router.get('/', filterDoctors);
+
+// 👨‍⚕️ GET: Doctors added by logged-in user
+router.get('/mydoctors', authenticateJWT, getDoctorsByUser);
+
+// 🔗 GET: Single doctor by category + slug (SEO-friendly)
+router.get('/:area/:category/:slug', getDoctorBySlug);
 
 module.exports = router;
+
