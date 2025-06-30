@@ -16,21 +16,9 @@ const MyListings = () => {
   const [listings, setListings] = useState([]);
 
   const cards = [
-    {
-      title: "Doctors",
-      icon: faUserMd,
-      path: "/doctors/add",
-    },
-    {
-      title: "Clinics",
-      icon: faClinicMedical,
-      path: "/clinics/add",
-    },
-    {
-      title: "Hospitals",
-      icon: faHospital,
-      path: "/hospitals/add",
-    },
+    { title: "Doctors", icon: faUserMd, path: "/doctors/add" },
+    { title: "Clinics", icon: faClinicMedical, path: "/clinics/add" },
+    { title: "Hospitals", icon: faHospital, path: "/hospitals/add" },
   ];
 
   useEffect(() => {
@@ -39,7 +27,7 @@ const MyListings = () => {
         const res = await axios.get("http://localhost:5000/api/user/listings", {
           withCredentials: true,
         });
-        setListings(res.data);    
+        setListings(res.data);
       } catch (err) {
         console.error("Error fetching listings:", err);
       }
@@ -48,13 +36,16 @@ const MyListings = () => {
     fetchListings();
   }, []);
 
+  const getImage = (item) =>
+    item.clinicImage || item.doctorImage || item.hospitalImage || "default.png";
+
   return (
     <>
       <Navbar />
       <Container className="my-5">
         <h2 className="text-center text-primary mb-4">My Listings</h2>
 
-        {/* Top Action Cards */}
+        {/* Add Listing Cards */}
         <Row className="justify-content-center custom-row mb-5">
           {cards.map((card, index) => (
             <Col key={index} xs={12} sm={6} md={4} lg={3} className="custom-col mb-4">
@@ -78,34 +69,41 @@ const MyListings = () => {
           ))}
         </Row>
 
-        {/* User Listings Below */}
+        {/* User Listings Section */}
         <h4 className="text-primary mb-3">Your Created Listings</h4>
         <Row>
           {listings.length === 0 ? (
             <p>No listings found.</p>
           ) : (
             listings.map((item) => (
-              <Col key={item.id} xs={12} sm={6} md={3} className="mb-4">
+              <Col
+                key={`${item.listingType}-${item.id}`}
+                xs={12}
+                sm={6}
+                md={3}
+                className="mb-4"
+              >
                 <Card className="shadow-sm h-100">
-                  {item.clinicImage && (
-                    <Card.Img
-                      variant="top"
-                      src={`http://localhost:5000/uploads/${item.clinicImage}`}
-                      style={{ height: "200px", objectFit: "cover" }}
-                    />
-                  )}
+                  <Card.Img
+                    variant="top"
+                    src={`http://localhost:5000/uploads/${getImage(item)}`}
+                    style={{ height: "200px", objectFit: "cover" }}
+                  />
                   <Card.Body>
                     <Card.Title>{item.name}</Card.Title>
                     <Card.Text>
                       <strong>Type:</strong> {item.type} <br />
                       <strong>Area:</strong> {item.area} <br />
                       <strong>Category:</strong> {item.category} <br />
-                      <strong>Mobile:</strong> {item.mobile}
+                      <strong>Mobile:</strong> {item.mobile} <br />
+                      <small className="text-muted">
+                        <strong>Listing:</strong> {item.listingType}
+                      </small>
                     </Card.Text>
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={() => navigate(`/edit/${item.id}`)}
+                      onClick={() => navigate(`/edit/${item.listingType}/${item.id}`)}
                       className="me-2"
                     >
                       Edit
