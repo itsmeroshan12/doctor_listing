@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { FaUserCircle, FaHeart } from 'react-icons/fa';
+import { FaUserCircle } from 'react-icons/fa';
 import './Navbar.css';
 import Collapse from 'bootstrap/js/dist/collapse';
 import axios from 'axios';
@@ -13,26 +13,25 @@ const Navbar = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Listen for changes to login state from other components
     const handleStorageChange = () => {
       setIsLoggedIn(!!localStorage.getItem('token'));
       setFirstName(localStorage.getItem('firstName') || 'User');
     };
 
-    // Listen for changes (like login/logout)
     window.addEventListener('storage', handleStorageChange);
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
   const handleLogout = async () => {
     try {
-      await axios.post("http://localhost:5000/auth/logout", {}, { withCredentials: true });
+      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
 
       localStorage.removeItem("token");
       localStorage.removeItem("firstName");
 
       setIsLoggedIn(false);
-      navigate('/');
+      navigate('/', { replace: true });
+      window.location.reload(); // Force UI and state reset
     } catch (error) {
       console.error("Logout error:", error);
     }

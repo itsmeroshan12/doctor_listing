@@ -19,7 +19,7 @@ const MyListings = () => {
     {
       title: "Doctors",
       icon: faUserMd,
-      path: "/doctors",
+      path: "/doctors/add",
     },
     {
       title: "Clinics",
@@ -29,7 +29,7 @@ const MyListings = () => {
     {
       title: "Hospitals",
       icon: faHospital,
-      path: "/hospitals",
+      path: "/hospitals/add",
     },
   ];
 
@@ -39,7 +39,7 @@ const MyListings = () => {
         const res = await axios.get("http://localhost:5000/api/user/listings", {
           withCredentials: true,
         });
-        setListings(res.data); // assuming data is an array of listings
+        setListings(res.data);    
       } catch (err) {
         console.error("Error fetching listings:", err);
       }

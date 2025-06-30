@@ -1,39 +1,38 @@
-// src/components/ClinicList.js
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import './ClinicList.css';
+import './ClinicList.css'; // reuse the same styles
 import { FaPhone, FaWhatsapp } from 'react-icons/fa';
 import { Collapse } from 'react-bootstrap';
 import Navbar from './Navbar';
 import slugify from '../utils/slugify';
 
-const ClinicList = () => {
+const DoctorList = () => {
   const [filters, setFilters] = useState({ name: '', area: '' });
-  const [clinics, setClinics] = useState([]);
+  const [doctors, setDoctors] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
-  const clinicsPerPage = 5;
+  const doctorsPerPage = 5;
 
   const isMobile = window.innerWidth <= 768;
 
-  const fetchClinics = async () => {
+  const fetchDoctors = async () => {
     setLoading(true);
     try {
-      const res = await axios.get('http://localhost:5000/api/clinics', {
+      const res = await axios.get('http://localhost:5000/api/doctors', {
         params: filters,
       });
       const sorted = res.data.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
-      setClinics(sorted);
+      setDoctors(sorted);
     } catch (error) {
-      console.error('Error fetching clinics:', error);
+      console.error('Error fetching doctors:', error);
     } finally {
       setLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchClinics();
+    fetchDoctors();
   }, [filters]);
 
   const handleChange = (e) => {
@@ -47,13 +46,13 @@ const ClinicList = () => {
   };
 
   const handleSearch = () => {
-    fetchClinics();
+    fetchDoctors();
   };
 
-  const indexOfLast = currentPage * clinicsPerPage;
-  const indexOfFirst = indexOfLast - clinicsPerPage;
-  const currentClinics = clinics.slice(indexOfFirst, indexOfLast);
-  const totalPages = Math.ceil(clinics.length / clinicsPerPage);
+  const indexOfLast = currentPage * doctorsPerPage;
+  const indexOfFirst = indexOfLast - doctorsPerPage;
+  const currentDoctors = doctors.slice(indexOfFirst, indexOfLast);
+  const totalPages = Math.ceil(doctors.length / doctorsPerPage);
 
   const truncateWords = (text, maxWords) => {
     if (!text) return '';
@@ -82,7 +81,7 @@ const ClinicList = () => {
       <Navbar />
 
       <div className="clinic-list-wrapper container mt-4">
-        <h2 className="text-center text-primary mb-4">Clinics</h2>
+        <h2 className="text-center text-primary mb-4">Doctors</h2>
 
         {isMobile && (
           <div className="text-center mb-2">
@@ -138,32 +137,32 @@ const ClinicList = () => {
               </div>
             </div>
           ))
-        ) : currentClinics.length === 0 ? (
-          <p className="text-center">No clinics found.</p>
+        ) : currentDoctors.length === 0 ? (
+          <p className="text-center">No doctors found.</p>
         ) : (
-          currentClinics.map((clinic) => (
-            <div key={clinic.id} className="clinic-listing mb-4 d-flex w-100 animate-fade-in">
+          currentDoctors.map((doc) => (
+            <div key={doc.id} className="clinic-listing mb-4 d-flex w-100 animate-fade-in">
               <img
-                src={`http://localhost:5000/uploads/${clinic.clinicImage}`}
-                alt={clinic.name}
+                src={`http://localhost:5000/uploads/${doc.doctorImage}`}
+                alt={doc.name}
                 className="clinic-img me-3 rounded"
               />
               <div className="flex-grow-1">
                 <div className="clinic-title fw-bold text-dark fs-5 mb-1">
-                  {highlightMatch(clinic.name, filters.name)}
+                  {highlightMatch(doc.name, filters.name)}
                 </div>
                 <div className="text-secondary small mb-1">
-                  {truncateWords(clinic.description, isMobile ? 15 : 25)}
+                  {truncateWords(doc.description, isMobile ? 15 : 25)}
                 </div>
                 <div className="text-muted small mb-3">
-                  📍 {highlightMatch(clinic.area, filters.area)}, {clinic.type} &nbsp;|&nbsp; 📞 {clinic.mobile} &nbsp;|&nbsp; 📅 {calculateDaysAgo(clinic.createdAt)}
+                  🩺 {doc.specialization} &nbsp;|&nbsp; 📍 {highlightMatch(doc.area, filters.area)} &nbsp;|&nbsp; 📞 {doc.mobile} &nbsp;|&nbsp; 📅 {calculateDaysAgo(doc.createdAt)}
                 </div>
                 <div className={`row g-2 ${isMobile ? 'flex-nowrap overflow-auto mobile-button-row' : ''}`}>
                   <div className="col-12 col-md">
                     <button
                       className="btn btn-sm btn-outline-primary shadow-sm rounded-pill custom-mobile-btn"
                       onClick={() => {
-                        window.location.href = `/clinics/${slugify(clinic.area)}/${slugify(clinic.category)}/${clinic.slug}`;
+                        window.location.href = `/doctors/${slugify(doc.area)}/${slugify(doc.category)}/${doc.slug}`;
                       }}
                     >
                       View More
@@ -172,7 +171,7 @@ const ClinicList = () => {
                   <div className="col-12 col-md">
                     <a
                       className="btn btn-sm btn-success shadow-sm rounded-pill custom-mobile-btn"
-                      href={`https://wa.me/91${clinic.mobile}`}
+                      href={`https://wa.me/91${doc.mobile}`}
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -182,13 +181,12 @@ const ClinicList = () => {
                   <div className="col-12 col-md">
                     <a
                       className="btn btn-sm btn-outline-secondary shadow-sm rounded-pill custom-mobile-btn"
-                      href={`tel:+91${clinic.mobile}`}
+                      href={`tel:+91${doc.mobile}`}
                     >
                       <FaPhone className="me-1" /> Call Now
                     </a>
                   </div>
                 </div>
-
               </div>
             </div>
           ))
@@ -198,8 +196,7 @@ const ClinicList = () => {
           {Array.from({ length: totalPages }, (_, idx) => (
             <button
               key={idx}
-              className={`btn btn-sm mx-1 custom-mobile-btn ${currentPage === idx + 1 ? 'btn-primary' : 'btn-outline-primary'
-                }`}
+              className={`btn btn-sm mx-1 custom-mobile-btn ${currentPage === idx + 1 ? 'btn-primary' : 'btn-outline-primary'}`}
               onClick={() => setCurrentPage(idx + 1)}
             >
               {idx + 1}
@@ -211,4 +208,4 @@ const ClinicList = () => {
   );
 };
 
-export default ClinicList;
+export default DoctorList;
