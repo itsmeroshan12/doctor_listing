@@ -2,7 +2,9 @@ import React, { useRef, useState } from "react";
 import axios from "axios";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import  Navbar from "./Navbar";
 import { useNavigate } from "react-router-dom";
+
 import {
   TextField,
   Autocomplete,
@@ -119,6 +121,14 @@ const AddDoctor = () => {
   };
 
   return (
+    <>
+      
+      <div className="px-4 mt-3">
+        <Button variant="outline-secondary" size="sm" onClick={() => navigate("/user/items")}>
+          ← Back to DashBoard
+        </Button>
+      </div>
+    
     <Box sx={{ maxWidth: 700, mx: "auto", mt: 5, p: 3, boxShadow: 3 }}>
       <Typography variant="h5" align="center" mb={3}>
         Add Doctor
@@ -303,6 +313,7 @@ const AddDoctor = () => {
       </form>
       <ToastContainer position="top-center" autoClose={3000} />
     </Box>
+    </>
   );
 };
 
