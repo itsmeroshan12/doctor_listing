@@ -169,3 +169,22 @@ exports.filterDoctors = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// delete a doctor
+
+exports.deleteDoctor = async (req, res) => {
+  const doctorId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const [rows] = await db.execute('SELECT * FROM doctors WHERE id = ? AND user_id = ?', [doctorId, userId]);
+    if (rows.length === 0) return res.status(403).json({ message: 'Unauthorized or doctor not found' });
+
+    await db.execute('DELETE FROM doctors WHERE id = ?', [doctorId]);
+    res.status(200).json({ message: 'Doctor deleted successfully' });
+  } catch (err) {
+    console.error('❌ Error deleting doctor:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};
+

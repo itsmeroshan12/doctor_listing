@@ -168,3 +168,20 @@ exports.filterClinics = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+
+exports.deleteClinic = async (req, res) => {
+  const clinicId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const [rows] = await db.execute('SELECT * FROM clinics WHERE id = ? AND user_id = ?', [clinicId, userId]);
+    if (rows.length === 0) return res.status(403).json({ message: 'Unauthorized or clinic not found' });
+
+    await db.execute('DELETE FROM clinics WHERE id = ?', [clinicId]);
+    res.status(200).json({ message: 'Clinic deleted successfully' });
+  } catch (err) {
+    console.error('❌ Error deleting clinic:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

@@ -153,3 +153,23 @@ exports.filterHospitals = async (req, res) => {
     res.status(500).json({ error: error.message });
   }
 };
+
+// delete a hospital
+exports.deleteHospital = async (req, res) => {
+  const hospitalId = req.params.id;
+  const userId = req.user.userId;
+
+  try {
+    const [rows] = await db.execute('SELECT * FROM hospitals WHERE id = ? AND user_id = ?', [hospitalId, userId]);
+    if (rows.length === 0) {
+      return res.status(403).json({ message: 'Unauthorized or hospital not found' });
+    }
+
+    await db.execute('DELETE FROM hospitals WHERE id = ?', [hospitalId]);
+
+    res.status(200).json({ message: 'Hospital deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting hospital:', err);
+    res.status(500).json({ message: 'Server error' });
+  }
+};

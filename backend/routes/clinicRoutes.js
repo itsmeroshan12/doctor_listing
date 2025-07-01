@@ -17,4 +17,8 @@ router.get('/myclinics', authenticateJWT, getClinicsByUser);
 // ✅ FIXED: Removed extra /clinics
 router.get('/:area/:category/:slug', getClinicBySlug);
 
+// DELETE: Remove clinic by ID
+router.delete('/:id', authenticateJWT, require('../controllers/clinicController').deleteClinic);
+
+
 module.exports = router;

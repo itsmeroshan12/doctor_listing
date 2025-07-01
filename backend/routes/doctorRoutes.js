@@ -23,5 +23,9 @@ router.get('/mydoctors', authenticateJWT, getDoctorsByUser);
 // 🔗 GET: Single doctor by category + slug (SEO-friendly)
 router.get('/:area/:category/:slug', getDoctorBySlug);
 
+// DELETE: Remove doctor by ID
+router.delete('/:id', authenticateJWT, require('../controllers/doctorController').deleteDoctor);
+
+
 module.exports = router;
 
