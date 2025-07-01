@@ -5,7 +5,10 @@ const {
   createHospital,
   getHospitalBySlug,
   filterHospitals,
-  getHospitalsByUser
+  getHospitalsByUser,
+   getHospitalById,
+   updateHospital,
+  
 } = require('../controllers/hospitalController');
 
 const { uploadFields } = require('../middleware/multer'); // ✅ for clinicImage, doctorImage, otherImage
@@ -26,6 +29,10 @@ router.get('/:area/:category/:slug', getHospitalBySlug);
 
 // 🗑️ DELETE: Delete hospital by ID (Authenticated)
 router.delete('/:id', authenticateJWT, require('../controllers/hospitalController').deleteHospital);
+
+//updtae hospital
+router.get('/:id', getHospitalById);
+router.put('/:id', authenticateJWT,uploadFields, updateHospital);
 
 
 module.exports = router;

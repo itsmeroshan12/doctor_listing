@@ -1,24 +1,38 @@
 const express = require('express');
 const router = express.Router();
+
 const {
   createClinic,
   getClinicBySlug,
   filterClinics,
-  getClinicsByUser
+  getClinicsByUser,
+  getClinicById,
+  updateClinic,
+  deleteClinic
 } = require('../controllers/clinicController');
+
 const { uploadFields } = require('../middleware/multer');
 const authenticateJWT = require('../middleware/authMiddleware');
 
-// Routes
+// POST: Create new clinic
 router.post('/', authenticateJWT, uploadFields, createClinic);
+
+// GET: Filter/search clinics
 router.get('/', filterClinics);
+
+// GET: Clinics created by the logged-in user
 router.get('/myclinics', authenticateJWT, getClinicsByUser);
 
-// ✅ FIXED: Removed extra /clinics
+// GET: View single clinic by slug
 router.get('/:area/:category/:slug', getClinicBySlug);
 
-// DELETE: Remove clinic by ID
-router.delete('/:id', authenticateJWT, require('../controllers/clinicController').deleteClinic);
+// GET: Clinic by ID (for editing)
+router.get('/:id', getClinicById);
 
+// PUT: Update clinic by ID
+router.put('/:id', authenticateJWT, uploadFields, updateClinic);
+
+// DELETE: Remove clinic by ID
+router.delete('/:id', authenticateJWT, deleteClinic);
 
 module.exports = router;

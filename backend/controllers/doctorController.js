@@ -188,3 +188,99 @@ exports.deleteDoctor = async (req, res) => {
   }
 };
 
+
+// GET doctor by ID (for editing)
+exports.getDoctorById = async (req, res) => {
+  try {
+    const [rows] = await db.execute("SELECT * FROM doctors WHERE id = ?", [req.params.id]);
+
+    if (rows.length === 0) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    res.json(rows[0]);
+  } catch (err) {
+    console.error("Error fetching doctor by ID:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+
+// PUT update doctor
+exports.updateDoctor = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const {
+      name,
+      area,
+      category,
+      specialization,
+      experienceYears,
+      type,
+      qualifications,
+      languagesSpoken,
+      address,
+      description,
+      mobile,
+      email,
+    } = req.body;
+
+    const safe = (value) => (value === undefined ? null : value); // ✅ helper
+
+    // Uploaded images (if any)
+    const doctorImage = req.files?.doctorImage?.[0]?.filename || null;
+    const clinicImage = req.files?.clinicImage?.[0]?.filename || null;
+    const otherImage = req.files?.otherImage?.[0]?.filename || null;
+
+    // Fetch existing images
+    const [existingRows] = await db.execute(
+      "SELECT doctorImage, clinicImage, otherImage FROM doctors WHERE id = ?",
+      [id]
+    );
+
+    if (existingRows.length === 0) {
+      return res.status(404).json({ message: "Doctor not found" });
+    }
+
+    const existing = existingRows[0];
+
+    const finalDoctorImage = doctorImage || existing.doctorImage;
+    const finalClinicImage = clinicImage || existing.clinicImage;
+    const finalOtherImage = otherImage || existing.otherImage;
+
+    await db.execute(
+      `UPDATE doctors SET 
+        name = ?, area = ?, category = ?, specialization = ?, experienceYears = ?, type = ?,
+        qualifications = ?, languagesSpoken = ?, address = ?, description = ?, 
+        mobile = ?, email = ?, doctorImage = ?, clinicImage = ?, otherImage = ?
+       WHERE id = ?`,
+      [
+        safe(name),
+        safe(area),
+        safe(category),
+        safe(specialization),
+        safe(experienceYears),
+        safe(type),
+        safe(qualifications),
+        safe(languagesSpoken),
+        safe(address),
+        safe(description),
+        safe(mobile),
+        safe(email),
+        safe(finalDoctorImage),
+        safe(finalClinicImage),
+        safe(finalOtherImage),
+        id,
+      ]
+    );
+
+    res.json({ message: "Doctor updated successfully" });
+  } catch (err) {
+    console.error("Error updating doctor:", err);
+    res.status(500).json({ message: "Internal server error" });
+  }
+};
+
+
+

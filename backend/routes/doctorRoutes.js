@@ -5,7 +5,10 @@ const {
   createDoctor,
   getDoctorBySlug,
   filterDoctors,
-  getDoctorsByUser
+  getDoctorsByUser,
+  getDoctorById,
+   updateDoctor
+
 } = require('../controllers/doctorController');
 
 const { uploadFields } = require('../middleware/multer'); // 🖼️ for doctorImage, clinicImage, otherImage
@@ -25,6 +28,13 @@ router.get('/:area/:category/:slug', getDoctorBySlug);
 
 // DELETE: Remove doctor by ID
 router.delete('/:id', authenticateJWT, require('../controllers/doctorController').deleteDoctor);
+
+
+// GET: Doctor by ID (for editing)
+router.get("/:id", getDoctorById);
+
+// PUT: Update doctor
+router.put("/:id", authenticateJWT, uploadFields, updateDoctor);
 
 
 module.exports = router;
