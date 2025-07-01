@@ -195,7 +195,7 @@ const AddDoctor = () => {
         />
 
         <TextField
-          label="Type (Allopathy, Ayurvedic, etc.)"
+          label="Type"
           name="type"
           value={formData.type}
           onChange={handleChange}

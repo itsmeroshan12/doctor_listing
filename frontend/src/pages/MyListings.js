@@ -232,7 +232,7 @@ const MyListings = () => {
                     <Button
                       variant="outline-primary"
                       size="sm"
-                      onClick={() => navigate(`/${item.listingType}s/edit/${item.id}`)}
+                      onClick={() => navigate(`/${item.listingType.toLowerCase()}s/edit/${item.id}`)}
                       className="me-2"
                     >
                       Edit

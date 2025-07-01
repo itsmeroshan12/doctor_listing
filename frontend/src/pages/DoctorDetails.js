@@ -8,8 +8,9 @@ import { Swiper, SwiperSlide } from 'swiper/react';
 import Skeleton from 'react-loading-skeleton';
 import 'react-loading-skeleton/dist/skeleton.css';
 import 'swiper/css';
-import styles from './ClinicDetails.module.css'; // reuse same styles
+import styles from './ClinicDetails.module.css';
 import Navbar from '../components/Navbar';
+import { Autoplay } from 'swiper/modules';
 
 const DoctorDetails = () => {
   const { area, category, slug } = useParams();
@@ -75,12 +76,30 @@ const DoctorDetails = () => {
             <div className="row">
               {/* Left Column: Swiper Images */}
               <div className={`col-md-4 col-sm-12 mb-3 p-2 ${styles.card}`}>
-                <Swiper spaceBetween={10} slidesPerView={1} className={styles.swiperContainer}>
+                <Swiper
+                  spaceBetween={10}
+                  slidesPerView={1}
+                  className={styles.swiperContainer}
+                  modules={[Autoplay]}
+                  autoplay={{
+                    delay: 2000,
+                    disableOnInteraction: false,
+                  }}
+                >
                   {doctor.doctorImage && (
                     <SwiperSlide>
                       <img
                         src={`http://localhost:5000/uploads/${doctor.doctorImage}`}
                         alt="Doctor"
+                        className={styles.swiperImage}
+                      />
+                    </SwiperSlide>
+                  )}
+                  {doctor.clinicImage && (
+                    <SwiperSlide>
+                      <img
+                        src={`http://localhost:5000/uploads/${doctor.clinicImage}`}
+                        alt="Clinic"
                         className={styles.swiperImage}
                       />
                     </SwiperSlide>
@@ -104,12 +123,19 @@ const DoctorDetails = () => {
                     <img
                       src={`http://localhost:5000/uploads/${doctor.doctorImage}`}
                       alt="Doctor"
-                      className={`me-3 ${styles.profileImage}`}
+                      className={`me-2 ${styles.profileImage}`}
                     />
                   ) : (
                     <FaUserMd className="me-2 text-primary" size={30} />
                   )}
-                  <h5 className={styles.heading}>{doctor.name}</h5>
+                  <div>
+                    <h5 className={styles.heading}>{doctor.name}</h5>
+                    {doctor.qualifications && (
+                      <p className="mb-0 text-muted" style={{ fontSize: "14px" }}>
+                        {doctor.qualifications}
+                      </p>
+                    )}
+                  </div>
                 </div>
 
                 <p className={styles.textJustify}>{doctor.description}</p>
@@ -123,15 +149,23 @@ const DoctorDetails = () => {
                 <div className={styles.infoText}>
                   <FaCalendarAlt className="me-2" /> Added {calculateDaysAgo(doctor.createdAt)}
                 </div>
-                <div className={styles.infoText}><strong>Category:</strong> {doctor.category}</div>
-                <div className={styles.infoText}><strong>Specialization:</strong> {doctor.specialization}</div>
-                <div className={styles.infoText}><strong>Experience:</strong> {doctor.experience} years</div>
-                <div className={styles.infoText}><strong>Email:</strong> {doctor.email}</div>
-                <div className={styles.infoText}>
-                  <strong>Website:</strong>{' '}
-                  <a href={doctor.website} target="_blank" rel="noreferrer">{doctor.website}</a>
-                </div>
 
+                {/* NEW FIELDS */}
+                <div className={styles.infoText}><strong>Category:</strong> {doctor.category}</div>
+                <div className={styles.infoText}><strong>Type:</strong> {doctor.type}</div>
+                <div className={styles.infoText}><strong>Specialization:</strong> {doctor.specialization}</div>
+                <div className={styles.infoText}><strong>Experience:</strong> {doctor.experienceYears} years</div>
+                <div className={styles.infoText}><strong>Qualifications:</strong> {doctor.qualifications}</div>
+                <div className={styles.infoText}><strong>Languages Spoken:</strong> {doctor.languagesSpoken}</div>
+                <div className={styles.infoText}><strong>Email:</strong> {doctor.email}</div>
+                {doctor.website && (
+                  <div className={styles.infoText}>
+                    <strong>Website:</strong>{' '}
+                    <a href={doctor.website} target="_blank" rel="noreferrer">{doctor.website}</a>
+                  </div>
+                )}
+
+                {/* Action Buttons */}
                 <div className="d-flex gap-2 mt-3 flex-wrap">
                   <a
                     className={`btn btn-outline-success ${styles.btnCustom}`}
