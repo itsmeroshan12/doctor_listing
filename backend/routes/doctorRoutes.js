@@ -7,35 +7,35 @@ const {
   filterDoctors,
   getDoctorsByUser,
   getDoctorById,
-   updateDoctor
-
+  updateDoctor,
+  getLatestDoctors
 } = require('../controllers/doctorController');
 
-const { uploadFields } = require('../middleware/multer'); // 🖼️ for doctorImage, clinicImage, otherImage
+const { uploadFields } = require('../middleware/multer');
 const authenticateJWT = require('../middleware/authMiddleware');
 
-// 🩺 POST: Create new doctor (Auth + Image Upload)
+// 🩺 Create new doctor
 router.post('/', authenticateJWT, uploadFields, createDoctor);
 
-// 🔍 GET: Filter/Search doctors
+// 🔍 Filter/Search doctors
 router.get('/', filterDoctors);
 
-// 👨‍⚕️ GET: Doctors added by logged-in user
+// 👤 Doctors added by logged-in user
 router.get('/mydoctors', authenticateJWT, getDoctorsByUser);
 
-// 🔗 GET: Single doctor by category + slug (SEO-friendly)
+// 🔗 Doctor by category/slug
 router.get('/:area/:category/:slug', getDoctorBySlug);
 
-// DELETE: Remove doctor by ID
+// 🆕 Latest doctors
+router.get('/latest', getLatestDoctors);
+
+// ✏️ Get doctor by ID
+router.get('/:id', getDoctorById);
+
+// 🗑️ Delete doctor
 router.delete('/:id', authenticateJWT, require('../controllers/doctorController').deleteDoctor);
 
-
-// GET: Doctor by ID (for editing)
-router.get("/:id", getDoctorById);
-
-// PUT: Update doctor
-router.put("/:id", authenticateJWT, uploadFields, updateDoctor);
-
+// 🔄 Update doctor
+router.put('/:id', authenticateJWT, uploadFields, updateDoctor);
 
 module.exports = router;
-

@@ -8,7 +8,8 @@ const {
   getClinicsByUser,
   getClinicById,
   updateClinic,
-  deleteClinic
+  deleteClinic,
+  getLatestClinics
 } = require('../controllers/clinicController');
 
 const { uploadFields } = require('../middleware/multer');
@@ -22,6 +23,9 @@ router.get('/', filterClinics);
 
 // GET: Clinics created by the logged-in user
 router.get('/myclinics', authenticateJWT, getClinicsByUser);
+
+// GET: Latest clinics
+router.get('/latest', getLatestClinics);
 
 // GET: View single clinic by slug
 router.get('/:area/:category/:slug', getClinicBySlug);

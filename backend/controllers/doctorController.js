@@ -283,4 +283,25 @@ exports.updateDoctor = async (req, res) => {
 };
 
 
+// listing for the homepage 
+exports.getLatestDoctors = async (req, res) => {
+  try {
+    const [doctors] = await db.execute(
+      'SELECT id, name, category, slug, area, doctorImage AS image FROM doctors ORDER BY createdAt DESC LIMIT 8'
+    );
+
+    const withImage = doctors.map(d => ({
+      ...d,
+      image: d.image?.split(',')[0] || null
+    }));
+
+    res.json(withImage);
+  } catch (error) {
+    console.error("❌ Error fetching latest doctors:", error.message);
+    res.status(500).json({ error: "Failed to fetch latest doctors" });
+  }
+};
+
+
+
 

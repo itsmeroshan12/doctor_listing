@@ -240,3 +240,41 @@ exports.updateHospital = async (req, res) => {
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
+
+// Get latest hospitals
+// Get latest hospitals
+exports.getLatestHospitals = async (req, res) => {
+  try {
+    const [hospitals] = await db.execute(
+      `SELECT 
+         id, 
+         name, 
+         category,      
+         area, 
+         slug, 
+         hospitalImage AS image 
+       FROM hospitals 
+       ORDER BY createdAt DESC 
+       LIMIT 8`
+    );
+
+    const withImage = hospitals.map(h => ({
+      ...h,
+      image: h.image?.split(',')[0] || null
+    }));
+
+    res.json(withImage);
+  } catch (error) {
+    console.error("❌ Error fetching latest hospitals:", error.message);
+    res.status(500).json({ error: "Failed to fetch latest hospitals" });
+  }
+};
+
+
+
+
+
+
+
+

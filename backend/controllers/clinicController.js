@@ -275,3 +275,40 @@ exports.updateClinic = async (req, res) => {
   }
 };
 
+
+// Get latest 4 clinics
+
+// Get latest clinics
+exports.getLatestClinics = async (req, res) => {
+  try {
+    const [clinics] = await db.execute(
+      `SELECT 
+         id, 
+         name, 
+          category, 
+         area, 
+         slug, 
+         clinicImage AS image 
+       FROM clinics 
+       ORDER BY createdAt DESC 
+       LIMIT 8`
+    );
+
+    const withImage = clinics.map(c => ({
+      ...c,
+      image: c.image?.split(',')[0] || null
+    }));
+
+    res.json(withImage);
+  } catch (error) {
+    console.error("❌ Error fetching latest clinics:", error.message);
+    res.status(500).json({ error: "Failed to fetch latest clinics" });
+  }
+};
+
+
+
+
+
+
+

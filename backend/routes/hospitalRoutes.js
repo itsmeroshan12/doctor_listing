@@ -6,33 +6,34 @@ const {
   getHospitalBySlug,
   filterHospitals,
   getHospitalsByUser,
-   getHospitalById,
-   updateHospital,
-  
+  getHospitalById,
+  updateHospital,
+  getLatestHospitals
 } = require('../controllers/hospitalController');
 
-const { uploadFields } = require('../middleware/multer'); // ✅ for clinicImage, doctorImage, otherImage
+const { uploadFields } = require('../middleware/multer');
 const authenticateJWT = require('../middleware/authMiddleware');
 
-
-// 🏥 POST: Create new hospital (Auth + Image Upload)
+// 🏥 Create hospital
 router.post('/', authenticateJWT, uploadFields, createHospital);
 
-// 🔍 GET: Filter/Search hospitals
+// 🔍 Filter hospitals
 router.get('/', filterHospitals);
 
-// 👤 GET: Hospitals added by logged-in user
+// 👤 Logged-in user's hospitals
 router.get('/myhospitals', authenticateJWT, getHospitalsByUser);
 
-// 🔗 GET: Single hospital by area + category + slug (SEO-friendly)
+// 🆕 Latest hospitals
+router.get('/latest', getLatestHospitals);
+
+// 🔗 SEO-friendly single hospital
 router.get('/:area/:category/:slug', getHospitalBySlug);
 
-// 🗑️ DELETE: Delete hospital by ID (Authenticated)
-router.delete('/:id', authenticateJWT, require('../controllers/hospitalController').deleteHospital);
-
-//updtae hospital
+// 🔄 Edit hospital
 router.get('/:id', getHospitalById);
-router.put('/:id', authenticateJWT,uploadFields, updateHospital);
+router.put('/:id', authenticateJWT, uploadFields, updateHospital);
 
+// 🗑️ Delete hospital
+router.delete('/:id', authenticateJWT, require('../controllers/hospitalController').deleteHospital);
 
 module.exports = router;
