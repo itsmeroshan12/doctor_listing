@@ -14,6 +14,7 @@ import 'react-loading-skeleton/dist/skeleton.css';
 import 'swiper/css';
 import styles from './ClinicDetails.module.css';
 import Navbar from '../components/Navbar';
+import { Autoplay } from 'swiper/modules';
 
 const HospitalDetails = () => {
   const { area, category, slug } = useParams();
@@ -78,7 +79,16 @@ const HospitalDetails = () => {
             <div className="row">
               {/* Left: Swiper Images */}
               <div className={`col-md-4 col-sm-12 mb-3 p-2 ${styles.card}`}>
-                <Swiper spaceBetween={10} slidesPerView={1} className={styles.swiperContainer}>
+                <Swiper
+                  spaceBetween={10}
+                  slidesPerView={1}
+                  className={styles.swiperContainer}
+                  modules={[Autoplay]}
+                  autoplay={{
+                    delay: 2500,
+                    disableOnInteraction: false,
+                  }}
+                >
                   {hospital.hospitalImage && (
                     <SwiperSlide>
                       <img

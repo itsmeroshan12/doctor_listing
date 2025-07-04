@@ -5,6 +5,12 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUserMd, faClinicMedical, faHospital } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
+import slugify from '../utils/slugify';
+import Footer from '../components/Footer';
+import { TypeAnimation } from 'react-type-animation';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import './Home.css';
 
 const Home = () => {
@@ -33,10 +39,8 @@ const Home = () => {
           ...clinicsRes.data.map(item => ({ ...item, type: 'clinic' })),
           ...hospitalsRes.data.map(item => ({ ...item, type: 'hospital' })),
         ];
-        
 
-        const shuffled = combined.sort(() => 0.5 - Math.random()).slice(0, 12);
-        setListings(shuffled);
+        setListings(combined.slice(0, 12));
       } catch (error) {
         console.error('Error fetching latest listings:', error);
       } finally {
@@ -47,37 +51,105 @@ const Home = () => {
     fetchListings();
   }, [API]);
 
+  const getListingUrl = (item) => {
+    const area = slugify(item.area || '');
+    const category = slugify(item.category || item.type || '');
+    const slug = item.slug;
+    return `/${item.type}s/${area}/${category}/${slug}`;
+  };
+
+  const handleAddClick = (e) => {
+    const token = localStorage.getItem('token');
+    if (!token) {
+      e.preventDefault();
+      toast.warning('Please login to add a listing');
+      navigate('/user/login');
+    }
+  };
+
   return (
     <>
       <Navbar />
       <Container className="mt-5">
-        <div className="text-center mb-5">
-          <h1 className="text-primary fw-bold">Welcome to Doctor Directory</h1>
-          <p className="lead">Search and list doctors, clinics, and hospitals near you.</p>
-          <Link to="/clinics/add" className="btn btn-success mt-2">➕ Add Clinic</Link>
-        </div>
+        <section className="premium-section py-5">
+          <div className="text-center mb-5">
+            <h1 className="text-white fw-bold">Welcome to Doctor Directory</h1>
 
-        <Row className="justify-content-center flex-wrap text-center mb-5">
-          {cards.map((card, index) => (
-            <Col key={index} xs={4} sm={4} md={3} lg={2} className="mb-3">
-              <Card
-                className="shadow-sm h-100 card-hover"
-                onClick={() => navigate(card.path)}
-                style={{ cursor: 'pointer' }}
+            <TypeAnimation
+              sequence={[
+                'Locate and list the best doctors - Clinic - hospitals in your city..',
+                2000,
+                '',
+                'Find trusted healthcare professionals near you..',
+                2000,
+                '',
+              ]}
+              wrapper="p"
+              className="lead typing-text text-light"
+              cursor={true}
+              repeat={Infinity}
+            />
+
+            <div className="dropdown d-inline-block mt-3 position-relative">
+              <button
+                className="btn btn-light dropdown-toggle fw-semibold"
+                type="button"
+                id="addDropdown"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+                onClick={handleAddClick}
               >
-                <Card.Body className="d-flex flex-column align-items-center justify-content-center py-4">
-                  <div className="icon-circle mb-3">
-                    <FontAwesomeIcon icon={card.icon} size="2x" className="text-primary" />
-                  </div>
-                  <Card.Title className="mb-2" style={{ fontSize: '1rem' }}>{card.title}</Card.Title>
-                  <Button variant="outline-primary" size="sm">View</Button>
-                </Card.Body>
-              </Card>
-            </Col>
-          ))}
-        </Row>
+                ➕ Add Listing
+              </button>
 
-        <div className="text-center mb-3">
+              <ul
+                className="dropdown-menu dropdown-menu-end shadow"
+                aria-labelledby="addDropdown"
+                style={{ position: 'absolute', zIndex: 1000 }}
+              >
+                <li>
+                  <Link className="dropdown-item d-flex align-items-center gap-2" to="/doctors/add">
+                    <i className="fas fa-user-md text-primary"></i> Add Doctor
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item d-flex align-items-center gap-2" to="/clinics/add">
+                    <i className="fas fa-clinic-medical text-success"></i> Add Clinic
+                  </Link>
+                </li>
+                <li>
+                  <Link className="dropdown-item d-flex align-items-center gap-2" to="/hospitals/add">
+                    <i className="fas fa-hospital text-danger"></i> Add Hospital
+                  </Link>
+                </li>
+              </ul>
+            </div>
+          </div>
+
+          <Container>
+            <Row className="justify-content-center flex-wrap text-center">
+              {cards.map((card, index) => (
+                <Col key={index} xs={6} sm={4} md={3} lg={2} className="mb-4">
+                  <Card
+                    className="shadow-sm h-100 card-hover bg-white rounded-4 border-0"
+                    onClick={() => navigate(card.path)}
+                    style={{ cursor: 'pointer' }}
+                  >
+                    <Card.Body className="d-flex flex-column align-items-center justify-content-center py-4">
+                      <div className="icon-circle mb-3">
+                        <FontAwesomeIcon icon={card.icon} size="2x" className="text-primary" />
+                      </div>
+                      <Card.Title className="mb-2" style={{ fontSize: '1rem' }}>{card.title}</Card.Title>
+                      <Button variant="outline-primary" size="sm">View</Button>
+                    </Card.Body>
+                  </Card>
+                </Col>
+              ))}
+            </Row>
+          </Container>
+        </section>
+
+        <div className="text-center mb-3 mt-5">
           <h4 className="text-dark">Latest Listings</h4>
         </div>
 
@@ -114,7 +186,7 @@ const Home = () => {
                       <Button
                         variant="primary"
                         size="sm"
-                        onClick={() => navigate(`/${item.type}s/${item.slug}`)}
+                        onClick={() => navigate(getListingUrl(item))}
                       >
                         View Details
                       </Button>
@@ -124,7 +196,40 @@ const Home = () => {
               ))}
           </Row>
         </Container>
+
+        <Container className='col-10 py-5'>
+          <Row className='g-5'>
+            <div className="offer-section text-center text-white px-3 py-5 rounded-2">
+              <h2 className="fw-bold mb-3">What We Offer</h2>
+              <p className="mb-5" style={{ maxWidth: '700px', margin: '0 auto' }}>
+                Doctor Directory is your one-stop platform to explore trusted <strong>Doctors</strong>,
+                top-rated <strong>Clinics</strong>, and leading <strong>Hospitals</strong> in your area.
+                Add your listings, connect with patients, and grow your medical presence — all in one place.
+              </p>
+
+              <div className="d-flex flex-wrap justify-content-center gap-4">
+                <div className="info-box text-start bg-light text-dark p-4 rounded shadow-sm">
+                  <h6 className="text-primary fw-bold mb-2">✅ Verified Listings</h6>
+                  <p className="small mb-0">Only trusted professionals and institutions.</p>
+                </div>
+                <div className="info-box text-start bg-light text-dark p-4 rounded shadow-sm">
+                  <h6 className="text-success fw-bold mb-2">📍 Location Based</h6>
+                  <p className="small mb-0">Find the nearest medical help in seconds.</p>
+                </div>
+                <div className="info-box text-start bg-light text-dark p-4 rounded shadow-sm">
+                  <h6 className="text-warning fw-bold mb-2">💼 Add Your Profile</h6>
+                  <p className="small mb-0">Doctors, Clinics, and Hospitals can list easily.</p>
+                </div>
+                <div className="info-box text-start bg-light text-dark p-4 rounded shadow-sm">
+                  <h6 className="text-danger fw-bold mb-2">🔒 Secure Contact</h6>
+                  <p className="small mb-0">We protect your privacy and data.</p>
+                </div>
+              </div>
+            </div>
+          </Row>
+        </Container>
       </Container>
+      <Footer />
     </>
   );
 };

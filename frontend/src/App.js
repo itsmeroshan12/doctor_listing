@@ -25,10 +25,13 @@ import HospitalDetails from './pages/HospitalDetails';
 import HospitalEdit from './pages/HospitalEdit';
 
 import MyListings from './pages/MyListings';
+import ClinicEdit from './pages/ClinicEdit';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
-import ClinicEdit from './pages/ClinicEdit';
+
+
+
 
 function App() {
   return (
@@ -61,6 +64,7 @@ function App() {
         <Route path="/hospitals/list" element={<HospitalList />} />
         <Route path="/hospitals/:area/:category/:slug" element={<HospitalDetails />} />
          <Route path="/hospitals/edit/:id" element={<HospitalEdit />} />
+         
         
 
         {/* Optional: 404 redirect */}

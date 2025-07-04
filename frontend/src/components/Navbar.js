@@ -97,7 +97,7 @@ const Navbar = () => {
                     </li>
                     <li><hr className="dropdown-divider" /></li>
                     <li>
-                      <Link className="dropdown-item" to="/user/items" onClick={handleCloseMenu}>
+                      <Link className="dropdown-item " to="/user/items" onClick={handleCloseMenu}>
                         My Listings
                       </Link>
                     </li>
@@ -108,16 +108,16 @@ const Navbar = () => {
             ) : (
               <>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/user/login" onClick={handleCloseMenu}>Login</Link>
+                  <Link className="nav-link btn-glass" to="/user/login" onClick={handleCloseMenu}>Login</Link>
                 </li>
                 <li className="nav-item">
-                  <Link className="nav-link" to="/user/register" onClick={handleCloseMenu}>Register</Link>
+                  <Link className="nav-link btn-glass" to="/user/register" onClick={handleCloseMenu}>Register</Link>
                 </li>
               </>
             )}
 
             <li className="nav-item">
-              <Link className="nav-link" to="/hospitals" onClick={handleCloseMenu}>All Listings</Link>
+              <Link className="nav-link btn-glass" to="/hospitals" onClick={handleCloseMenu}>All Listings</Link>
             </li>
 
             {isLoggedIn && (
