@@ -136,9 +136,9 @@ const ClinicEdit = () => {
             margin="normal"
             required
           >
-            <MenuItem value="doctor">Doctor</MenuItem>
+           
             <MenuItem value="clinic">Clinic</MenuItem>
-            <MenuItem value="hospital">Hospital</MenuItem>
+           
           </TextField>
 
           <TextField

@@ -134,13 +134,13 @@ const AddListing = () => {
           margin="normal"
           required
         >
-          <MenuItem value="doctor">Doctor</MenuItem>
+         
           <MenuItem value="clinic">Clinic</MenuItem>
-          <MenuItem value="hospital">Hospital</MenuItem>
+        
         </TextField>
 
         <TextField
-          label="Clinic/Hospital Name"
+          label="Clinic Name"
           name="name"
           value={formData.name}
           onChange={handleChange}

@@ -6,6 +6,7 @@ import {
   Typography,
   TextField,
   Button,
+  MenuItem,
   Autocomplete,
 } from "@mui/material";
 import axios from "axios";
@@ -162,14 +163,18 @@ const HospitalEdit = () => {
           />
 
           <TextField
-            label="Type"
+             select
+            label="Listing Type"
             name="type"
             value={formData.type}
             onChange={handleChange}
             fullWidth
             margin="normal"
             required
-          />
+          >
+            
+            <MenuItem value="hospital">Hospital</MenuItem>
+            </TextField>
 
           <TextField
             label="Description"

@@ -9,6 +9,7 @@ import {
   Autocomplete,
   Button,
   Box,
+  MenuItem,
   Typography,
 } from "@mui/material";
 
@@ -159,14 +160,18 @@ const AddHospital = () => {
         />
 
         <TextField
-          label="Type (Private, Government, etc.)"
+          select
+          label="Listing Type"
           name="type"
           value={formData.type}
           onChange={handleChange}
           fullWidth
           margin="normal"
           required
-        />
+        >
+        <MenuItem value="doctor">Hospital</MenuItem>
+                  
+        </TextField>
 
         <TextField
           label="Description"

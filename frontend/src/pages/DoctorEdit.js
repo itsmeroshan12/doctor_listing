@@ -6,6 +6,7 @@ import {
   Typography,
   TextField,
   Button,
+  MenuItem,
   Autocomplete,
 } from "@mui/material";
 import axios from "axios";
@@ -201,14 +202,17 @@ const DoctorEdit = () => {
           />
 
           <TextField
-            label="Type (Allopathy, Ayurvedic, etc.)"
+            label="Type "
             name="type"
             value={formData.type}
             onChange={handleChange}
             fullWidth
             margin="normal"
             required
-          />
+          >
+            <MenuItem value="doctor">Doctor</MenuItem>
+
+            </TextField>
 
           <TextField
             label="Languages Spoken"
