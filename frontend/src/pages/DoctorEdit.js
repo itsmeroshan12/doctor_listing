@@ -202,7 +202,8 @@ const DoctorEdit = () => {
           />
 
           <TextField
-            label="Type "
+            select
+            label="Listing Type"
             name="type"
             value={formData.type}
             onChange={handleChange}
@@ -212,7 +213,7 @@ const DoctorEdit = () => {
           >
             <MenuItem value="doctor">Doctor</MenuItem>
 
-            </TextField>
+          </TextField>
 
           <TextField
             label="Languages Spoken"
@@ -289,6 +290,17 @@ const DoctorEdit = () => {
             margin="normal"
             multiline
             rows={2}
+            required
+          />
+          <TextField
+            label="Description"
+            name="description"
+            value={formData.description}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            multiline
+            rows={3}
             required
           />
 
