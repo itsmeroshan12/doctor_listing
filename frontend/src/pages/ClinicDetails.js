@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import {
-  FaPhone, FaWhatsapp, FaMapMarkerAlt, FaCalendarAlt, FaUserMd
+  FaPhone, FaWhatsapp, FaMapMarkerAlt, FaCalendarAlt, FaUserMd,
 } from 'react-icons/fa';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import Skeleton from 'react-loading-skeleton';
@@ -12,10 +12,12 @@ import styles from './ClinicDetails.module.css';
 import Navbar from '../components/Navbar';
 import { Autoplay } from 'swiper/modules';
 
+
 const ClinicDetails = () => {
   const { area, category, slug } = useParams();
   const [clinic, setClinic] = useState(null);
   const [loading, setLoading] = useState(true);
+
 
   useEffect(() => {
     const fetchClinic = async () => {
@@ -67,6 +69,7 @@ const ClinicDetails = () => {
   return (
     <>
       <Navbar />
+
 
       <div className={styles.container}>
         <h2 className={styles.title}>{clinic.name}</h2>
@@ -129,8 +132,20 @@ const ClinicDetails = () => {
                   ) : (
                     <FaUserMd className="me-2 text-primary" size={30} />
                   )}
-                  <h5 className={styles.heading}>{clinic.doctorName}</h5>
+
+                  <div className="d-flex flex-column">
+                    <h5 className={styles.heading} style={{ marginBottom: "2px" }}>
+                      {clinic.doctorName}
+                    </h5>
+
+                    {clinic.qualifications && (
+                      <span className="fw-semibold text-secondary" style={{ fontSize: "14px" }}>
+                        {clinic.qualifications}
+                      </span>
+                    )}
+                  </div>
                 </div>
+
 
                 <p className={styles.textJustify}>{clinic.description}</p>
 
@@ -144,7 +159,10 @@ const ClinicDetails = () => {
                   <FaCalendarAlt className="me-2" /> Added {calculateDaysAgo(clinic.createdAt)}
                 </div>
                 <div className={styles.infoText}><strong>Category:</strong> {clinic.category}</div>
+                <div className={styles.infoText}><strong>Qualifications:</strong> {clinic.qualifications}</div>
+
                 <div className={styles.infoText}><strong>Specialization:</strong> {clinic.specialization}</div>
+
                 <div className={styles.infoText}><strong>Experience:</strong> {clinic.experience} years</div>
                 <div className={styles.infoText}><strong>Email:</strong> {clinic.email}</div>
                 <div className={styles.infoText}>

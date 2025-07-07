@@ -183,7 +183,6 @@ const ClinicEdit = () => {
             margin="normal"
             required
           />
-
           <TextField
             label="Address"
             name="address"
@@ -216,6 +215,15 @@ const ClinicEdit = () => {
               inputMode: 'numeric',
               pattern: '[0-9]{1,2}',
             }}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Qualifications"
+            name="qualifications"
+            value={formData.qualifications}
+            onChange={handleChange}
             fullWidth
             margin="normal"
             required

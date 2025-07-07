@@ -5,6 +5,8 @@ import { FaPhone, FaWhatsapp } from 'react-icons/fa';
 import { Collapse } from 'react-bootstrap';
 import Navbar from './Navbar';
 import slugify from '../utils/slugify';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 const DoctorList = () => {
   const [filters, setFilters] = useState({ name: '', area: '' });
@@ -13,6 +15,7 @@ const DoctorList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [showFilters, setShowFilters] = useState(false);
   const doctorsPerPage = 5;
+  const navigate = useNavigate();
 
   const isMobile = window.innerWidth <= 768;
 
@@ -80,6 +83,11 @@ const DoctorList = () => {
     <>
       <Navbar />
 
+      <div className="px-4 mt-3">
+        <Button variant="outline-secondary" size="sm" onClick={() => navigate("/")}>
+          ← Back to Home
+        </Button>
+      </div>
       <div className="clinic-list-wrapper container mt-4">
         <h2 className="text-center text-primary mb-4">Doctors</h2>
 

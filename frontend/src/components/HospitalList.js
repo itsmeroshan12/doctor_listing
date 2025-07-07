@@ -5,6 +5,8 @@ import { FaPhone, FaWhatsapp } from 'react-icons/fa';
 import { Collapse } from 'react-bootstrap';
 import Navbar from './Navbar';
 import slugify from '../utils/slugify';
+import { Button } from 'react-bootstrap';
+import { useNavigate } from "react-router-dom";
 
 const HospitalList = () => {
   const [filters, setFilters] = useState({ name: '', area: '' });
@@ -14,6 +16,7 @@ const HospitalList = () => {
   const [showFilters, setShowFilters] = useState(false);
   const hospitalsPerPage = 5;
   const isMobile = window.innerWidth <= 768;
+  const navigate = useNavigate();
 
   const fetchHospitals = async () => {
     setLoading(true);
@@ -78,6 +81,11 @@ const HospitalList = () => {
   return (
     <>
       <Navbar />
+      <div className="px-4 mt-3">
+        <Button variant="outline-secondary" size="sm" onClick={() => navigate("/")}>
+          ← Back to Home
+        </Button>
+      </div>
       <div className="clinic-list-wrapper container mt-4">
         <h2 className="text-center text-primary mb-4">Hospitals</h2>
 
@@ -206,9 +214,8 @@ const HospitalList = () => {
           {Array.from({ length: totalPages }, (_, idx) => (
             <button
               key={idx}
-              className={`btn btn-sm mx-1 custom-mobile-btn ${
-                currentPage === idx + 1 ? 'btn-primary' : 'btn-outline-primary'
-              }`}
+              className={`btn btn-sm mx-1 custom-mobile-btn ${currentPage === idx + 1 ? 'btn-primary' : 'btn-outline-primary'
+                }`}
               onClick={() => setCurrentPage(idx + 1)}
             >
               {idx + 1}

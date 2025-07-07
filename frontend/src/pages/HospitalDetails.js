@@ -113,8 +113,17 @@ const HospitalDetails = () => {
               {/* Right: Info */}
               <div className={`col-md-8 col-sm-12 p-3 ${styles.card}`}>
                 <div className="d-flex align-items-center mb-3">
-                  <FaHospital className="me-2 text-primary" size={30} />
-                  <h5 className={styles.heading}>{hospital.type}</h5>
+                  {hospital.hospitalImage ? (
+                    <img
+                      src={`http://localhost:5000/uploads/${hospital.hospitalImage}`}
+                      alt="Hospital"
+                      className={`me-2 ${styles.profileImage}`}
+                    />
+                  ) : (
+                    <FaHospital className="me-2 text-primary" size={30} />
+                  )}
+
+                  <h5 className={styles.heading}>{hospital.name}</h5>
                 </div>
 
                 <p className={styles.textJustify}>{hospital.description}</p>

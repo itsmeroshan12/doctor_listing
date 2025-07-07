@@ -128,12 +128,13 @@ const DoctorDetails = () => {
                   ) : (
                     <FaUserMd className="me-2 text-primary" size={30} />
                   )}
-                  <div>
-                    <h5 className={styles.heading}>{doctor.name}</h5>
+                  <div className="d-flex flex-column">
+                    <h5 className="fw-bold mb-1">{doctor.name}</h5>
+
                     {doctor.qualifications && (
-                      <p className="mb-0 text-muted" style={{ fontSize: "14px" }}>
+                      <span className="fw-semibold text-secondary" style={{ fontSize: "14px" }}>
                         {doctor.qualifications}
-                      </p>
+                      </span>
                     )}
                   </div>
                 </div>

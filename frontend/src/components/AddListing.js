@@ -37,6 +37,7 @@ const AddListing = () => {
   const [formData, setFormData] = useState({
     name: "",
     doctorName: "",
+    qualifications: "",
     mobile: "",
     email: "",
     address: "",
@@ -84,6 +85,7 @@ const AddListing = () => {
       setFormData({
         name: "",
         doctorName: "",
+        qualifications: "",
         mobile: "",
         email: "",
         address: "",
@@ -181,6 +183,15 @@ const AddListing = () => {
             label="Specialization"
             name="specialization"
             value={formData.specialization}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+            required
+          />
+          <TextField
+            label="Qualifications"
+            name="qualifications"
+            value={formData.qualifications}
             onChange={handleChange}
             fullWidth
             margin="normal"
