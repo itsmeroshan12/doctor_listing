@@ -5,6 +5,7 @@ const slugify = require('slugify');
 exports.createClinic = async ({
   name,
   doctorName,
+  qualifications,
   mobile,
   email,
   address,
@@ -25,7 +26,7 @@ exports.createClinic = async ({
 
   const [result] = await db.execute(
     `INSERT INTO clinics 
-    (name, type, area, slug, doctorName, mobile, email, address, website, 
+    (name, type, area, slug, doctorName, qualifications, mobile, email, address, website, 
      experience, specialization, category, description, clinicImage, doctorImage, otherImage, user_id) 
      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
     [
@@ -34,6 +35,7 @@ exports.createClinic = async ({
       area,
       slug,
       doctorName,
+      qualifications,
       mobile,
       email,
       address,

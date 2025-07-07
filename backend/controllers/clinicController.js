@@ -13,6 +13,7 @@ exports.createClinic = async (req, res) => {
     const {
       name,
       doctorName,
+      qualifications,
       mobile,
       email,
       address,
@@ -42,6 +43,7 @@ exports.createClinic = async (req, res) => {
     const values = [
       name,
       doctorName,
+      qualifications,
       mobile,
       email,
       address,
@@ -63,8 +65,8 @@ exports.createClinic = async (req, res) => {
 
     const [result] = await db.execute(
       `INSERT INTO clinics 
-      (name, doctorName, mobile, email, address, website, experience, specialization, area, category, description, type, clinicImage, doctorImage, otherImage, slug, createdAt, updatedAt, user_id) 
-      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+      (name, doctorName, qualifications, mobile, email, address, website, experience, specialization, area, category, description, type, clinicImage, doctorImage, otherImage, slug, createdAt, updatedAt, user_id) 
+      VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
       values
     );
 
@@ -72,7 +74,7 @@ exports.createClinic = async (req, res) => {
       id: result.insertId,
       name,
       slug,
-      area,
+      area, 
       type,
       clinicImage,
       doctorImage,
@@ -211,6 +213,7 @@ exports.updateClinic = async (req, res) => {
     const {
       name,
       doctorName,
+      qualifications,
       mobile,
       email,
       address,
@@ -244,13 +247,14 @@ exports.updateClinic = async (req, res) => {
 
     await db.execute(
       `UPDATE clinics SET
-        name = ?, doctorName = ?, mobile = ?, email = ?, address = ?, website = ?,
+        name = ?, doctorName = ?, qualifications = ?, mobile = ?, email = ?, address = ?, website = ?,
         experience = ?, specialization = ?, area = ?, category = ?, description = ?, type = ?,
         clinicImage = ?, doctorImage = ?, otherImage = ?
       WHERE id = ?`,
       [
         name,
         doctorName,
+        qualifications,
         mobile,
         email,
         address,
