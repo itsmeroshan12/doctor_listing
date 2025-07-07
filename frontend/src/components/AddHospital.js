@@ -166,9 +166,20 @@ const AddHospital = () => {
                 label="Category"
                 margin="normal"
                 required
-                onChange={(e) =>
-                  setFormData((prev) => ({ ...prev, category: e.target.value }))
-                }
+                onChange={(e) => {
+                  const value = e.target.value;
+
+                  // ✅ Check for multiple words
+                  if (/\s/.test(value.trim())) {
+                    const suggested = value.trim().toLowerCase().replace(/\s+/g, '-');
+                    toast.info(`Use "${suggested}" instead of spaces`, {
+                      position: "top-center",
+                      autoClose: 3000,
+                    });
+                  }
+
+                  setFormData((prev) => ({ ...prev, category: value }));
+                }}
               />
             )}
           />
