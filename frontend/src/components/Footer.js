@@ -10,7 +10,7 @@ const Footer = () => {
         <p className="mb-2">&copy; {new Date().getFullYear()} DoctorDirectory</p>
         <div className="footer-links mb-2">
           <a href="/">Home</a>
-          <a href="/Hospitals">View Listings</a>
+          
           <a href="/user/login">Login</a>
         </div>
         <div className="social-icons">

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
 import Home from './pages/Home';
 import ForgotPassword from './pages/ForgotPassword';
@@ -30,6 +30,8 @@ import ClinicEdit from './pages/ClinicEdit';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min';
 
+import ProtectedRoute from './components/ProtectedRoute';
+
 
 
 
@@ -45,30 +47,31 @@ function App() {
         <Route path="/verify-email" element={<VerifyEmail />} />
         <Route path="/user/forgot-password" element={<ForgotPassword />} />
         <Route path="/user/reset-password/:token" element={<ResetPassword />} />
-        <Route path="/user/items" element={<MyListings />} />
+
+        <Route path="/user/items" element={  <ProtectedRoute> <MyListings /> </ProtectedRoute>} />
 
         {/* Clinic */}
-        <Route path="/clinics/add" element={<AddClinic />} />
+        <Route path="/clinics/add" element={<ProtectedRoute><AddClinic /></ProtectedRoute>} />
         <Route path="/clinics/list" element={<ClinicList />} />
         <Route path="/clinics/:area/:category/:slug" element={<ClinicDetails />} />
-        <Route path="/clinics/edit/:id" element={<ClinicEdit />} />
+        <Route path="/clinics/edit/:id" element={<ProtectedRoute><ClinicEdit /></ProtectedRoute>} />
 
         {/* Doctor */}
-        <Route path="/doctors/add" element={<AddDoctor />} />
+        <Route path="/doctors/add" element={<ProtectedRoute> <AddDoctor /></ProtectedRoute>} />
         <Route path="/doctors/list" element={<DoctorList />} />
         <Route path="/doctors/:area/:category/:slug" element={<DoctorDetails />} />
-        <Route path="/doctors/edit/:id" element={<DoctorEdit />} /> 
+        <Route path="/doctors/edit/:id" element={<ProtectedRoute><DoctorEdit /></ProtectedRoute>} /> 
 
         {/* Hospital - ✅ Correct Route */}
-        <Route path="/hospitals/add" element={<AddHospital />} />
+        <Route path="/hospitals/add" element={<ProtectedRoute><AddHospital /></ProtectedRoute>} />
         <Route path="/hospitals/list" element={<HospitalList />} />
         <Route path="/hospitals/:area/:category/:slug" element={<HospitalDetails />} />
-         <Route path="/hospitals/edit/:id" element={<HospitalEdit />} />
+         <Route path="/hospitals/edit/:id" element={<ProtectedRoute><HospitalEdit /></ProtectedRoute>} />
          
         
 
         {/* Optional: 404 redirect */}
-        {/* <Route path="*" element={<Navigate to="/" replace />} /> */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Router>
   );

@@ -136,9 +136,9 @@ const ClinicEdit = () => {
             margin="normal"
             required
           >
-           
+
             <MenuItem value="clinic">Clinic</MenuItem>
-           
+
           </TextField>
 
           <TextField
@@ -204,14 +204,23 @@ const ClinicEdit = () => {
           />
 
           <TextField
-            label="Experience (Years)"
+            label="Experience (years)"
             name="experience"
             value={formData.experience}
-            onChange={handleChange}
+            onChange={(e) => {
+              const val = e.target.value.replace(/[^0-9]/g, '').slice(0, 2);
+              setFormData((prev) => ({ ...prev, experience: val }));
+            }}
+            inputProps={{
+              maxLength: 2,
+              inputMode: 'numeric',
+              pattern: '[0-9]{1,2}',
+            }}
             fullWidth
             margin="normal"
             required
           />
+
 
           <TextField
             label="Specialization"

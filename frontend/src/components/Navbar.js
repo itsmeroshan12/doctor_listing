@@ -22,20 +22,30 @@ const Navbar = () => {
     return () => window.removeEventListener('storage', handleStorageChange);
   }, []);
 
-  const handleLogout = async () => {
-    try {
-      await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
+ const handleLogout = async () => {
+  try {
+    // Call logout API
+    await axios.post("http://localhost:5000/api/auth/logout", {}, { withCredentials: true });
 
-      localStorage.removeItem("token");
-      localStorage.removeItem("firstName");
+    // Clear auth data
+    localStorage.removeItem("token");
+    localStorage.removeItem("firstName");
 
-      setIsLoggedIn(false);
-      navigate('/', { replace: true });
-      window.location.reload(); // Force UI and state reset
-    } catch (error) {
-      console.error("Logout error:", error);
-    }
-  };
+    // Redirect with full state reset
+    setIsLoggedIn(false);
+
+    // Use replace to clear browser history
+    navigate('/', { replace: true });
+
+    // Ensure React state + memory are reset to prevent protected page access
+    setTimeout(() => {
+      window.location.reload();  // Clear cache + force logout reflection
+    }, 100);
+  } catch (error) {
+    console.error("Logout error:", error);
+  }
+};
+
 
   const handleTogglerClick = () => {
     const nav = document.getElementById('navbarNav');
@@ -116,9 +126,7 @@ const Navbar = () => {
               </>
             )}
 
-            <li className="nav-item">
-              <Link className="nav-link btn-glass" to="/hospitals" onClick={handleCloseMenu}>All Listings</Link>
-            </li>
+         
 
             {isLoggedIn && (
               <li className="nav-item">
